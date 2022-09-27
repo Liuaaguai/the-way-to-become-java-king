@@ -50,7 +50,7 @@ UTF-8 是在互联网上使用最广的一种 Unicode 的实现方式。
 - 对于多字节的UTF-8编码，如果编码包含 n 个字节，那么第一个字节的前 n 位为1，第一个字节的第 n+1 位为0，该字节的剩余各位用来对字符进行编码。在第一个字节之后的 所有的字节，都是最高两位为"10"，其余6位用来对字符进行编码。
 
 
-Unicode 字符集只是定义了字符的集合和唯一编号，Unicode 编码， 则是对 UTF-8、UCS-2/UTF-16 等具体编码方案的统称而已，并不是具体的编码方案。所以当需要用到字符编码的时候，你可以写 gb2312，codepage936，utf-8，utf-16，但请不要写 Unicode。 造成乱码的原因就是因为使用了错误的字符编码去解码字节流，因此当我们在思考任何跟文本 显示有关的问题时，请时刻保持清醒：当前使用的字符编码是什么。只有这样，我们才能正确 分析和处理乱码问题。 常见 CharSet 有：GBK、GB2312、US-ASCII、ISO-8859-1、UTF-8、UTF-16BE、UTF-16LE、UTF-16
+Unicode 字符集只是定义了字符的集合和唯一编号，Unicode 编码， 则是对 UTF-8、UCS-2/UTF-16 等具体编码方案的统称而已，并不是具体的编码方案。所以当需要用到字符编码的时候，你可以写 gb2312，codepage936，utf-8，utf-16，但请不要写 Unicode。 造成乱码的原因就是因为使用了错误的字符编码去解码字节流，因此当我们在思考任何跟文本 显示有关的问题时，请时刻保持清醒：当前使用的字符编码是什么。只有这样，我们才能正确 分析和处理乱码问题。 常见 CharSet 有：**GBK、GB2312、US-ASCII、ISO-8859-1、UTF-8、UTF-16BE、UTF-16LE、UTF-16**
 
 ### 1.4 计算机数字编码
 
@@ -80,17 +80,17 @@ Unicode 字符集只是定义了字符的集合和唯一编号，Unicode 编码�
 
 **为什么要使用原码、反码、补码表示形式呢？**
 
- 计算机辨别“符号位”显然会让计算机的基础电路设计变得十分复杂! 于是 人们想出了将符号位也参与运算的方法. 我们知道, 根据运算法则减去一个正数等于加上一个负数, 即: 1-1 = 1 + (-1) = 0 , 所以机器可以只有加法而没有 减法, 这样计算机运算的设计就更简单了。
+计算机辨别“符号位”显然会让计算机的基础电路设计变得十分复杂! 于是 人们想出了将符号位也参与运算的方法. 我们知道, 根据运算法则减去一个正数等于加上一个负数, 即: 1-1 = 1 + (-1) = 0 , 所以机器可以**只有加法而没有减法**, 这样计算机运算的设计就更简单了。
 
 
 
 ### 1.5 运算符
 
-思考一: 区别
+思考: 区别
 
 ```java
 short s = 3;
-s = s+2;//报错，提示需要int类型
+s = s + 2;//报错，提示需要int类型
 s += 2; //啊对对对
 ```
 
@@ -98,7 +98,7 @@ s += 2; //啊对对对
 | :----------: | ------------------------------------------------------------ |
 |      <<      | 空位补0，被移除的位丢弃，空缺位补0。                         |
 |      >>      | 被移位的二进制最高位是0，右移后，空缺位补0；最高位是1，空缺位补1 |
-|     >>>      | 被移位二进制最高位无论是0或者是1，空缺位都用0补。            |
+|     >>>      | 被移位二进制最高位无论是0或者是1，**空缺位都用0补**。        |
 
 
 
@@ -106,9 +106,9 @@ s += 2; //啊对对对
 
 **switch语句有关规则** 
 
- switch(表达式)中表达式的值必须是下述几种类型之一：**char, byte, short, int, Character, Byte, Short, Integer, String, or an enum**
+- switch(表达式)中表达式的值必须是下述几种类型之一：**char, byte, short, int, Character, Byte, Short, Integer, String, or an enum**
+- case子句中的值必须是常量，不能是变量名或不确定的表达式值；
 
- case子句中的值必须是常量，不能是变量名或不确定的表达式值；
 
 ````java
 int i = 0;
@@ -146,15 +146,13 @@ int[][]arr = new int[][3]; //非法
 
 #### 1.7.1 java中的内存分配
 
-- 目前我们只需要记住两个内存，分别是：栈内存和堆内存
-
 |  区域名称  | 作用                                                         |
 | :--------: | ------------------------------------------------------------ |
 |   寄存器   | 给CPU使用，和我们开发无关。                                  |
 | 本地方法栈 | JVM在使用操作系统功能的时候使用，和我们开发无关。            |
-|   方法区   | 用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据 |
+|   方法区   | 用于存储已被虚拟机加载的**类信息、常量、静态变量**、即时编译器编译后的代码等数据 |
 |   堆内存   | 存储对象或者数组，new来创建的，都存储在堆内存。              |
-|     栈     | 是指虚拟机栈。虚拟机栈用于存储局部变量等。 局部变量表存放了编译期可知长度的 各种基本数据类型、对象引用。 方法执行完，自动释放。 |
+|     栈     | 是指虚拟机栈。虚拟机栈用于存储局部变量等。 局部变量表存放了编译期可知长度的各种基本数据类型、对象引用。 方法执行完自动释放。 |
 
 打印数组的时候，实际出现的是数组的**地址值**。
 
@@ -290,19 +288,7 @@ I：表示现在打印的数组是int类型的。
 
 
 
-### 2.3 属性赋值顺序
-
-① 默认初始化 
-
-② 显式初始化 
-
-③ 构造器中初始化 
-
-④ 通过“对象.属性“或“对象.方法”的方式赋值
-
-
-
-### 2.4 关键字--this
+### 2.3 关键字--this
 
 - 使用this访问属性和方法时， 如果在**本类中未找到**，会从**父类中查找**
 - 可以在类的构造器中使用"this(形参列表)"的方式，调用本类中重载的其他的构造器！ 
@@ -378,7 +364,7 @@ int i = min(23,32);
 
 - 子类不能**重写父类中声明为private权限**的方法 
 
-- 子类方法抛出的异常不能大于父类被重写方法的异常，比如说父类掏Exception，子类不能掏Throwable，只能掏更有指向性的异常
+- 子类方法抛出的异常不能大于父类被重写方法的异常，比如说父类掏Exception，子类不能掏Throwable，只能掏**更有指向性的异常**
 
 - 子类与父类中同名同参数的方法必须**同时声明**为非static的(即为重写)，或者同时声明为 static的（不是重写）。因为static方法是属于类的，子类无法覆盖父类的方法。
 
@@ -500,7 +486,7 @@ class Som {
 
 #### 2.11.1 模板方法设计模式(TemplateMethod)
 
-抽象类体现的就是一种模板模式的设计，抽象类作为多个子类的通用模板，子类在抽象类的基础上进行扩展、改造，但子类总体上会保留抽象 类的行为方式。
+抽象类体现的就是一种模板模式的设计，抽象类作为多个子类的通用模板，子类在抽象类的基础上进行扩展、改造，但子类总体上会保留抽象类的行为方式。
 
 解决的问题： 
 
@@ -535,10 +521,26 @@ class SubTemplate extends Template {
 **接口的特点：**
 
 1. 用interface来定义。
+
 2. 接口中的所有成员变量都默认是由**public static final**修饰的，**写其他的会报错！**
+
 3. 接口中的所有**抽象**方法都默认是由**public abstract**修饰的
+
 4. 接口中**没有构造器**。
+
 5. 接口采用**多继承**机制。
+
+6. **实现类必须实现接口，不管其父类有没有相同方法**
+
+   ````java
+   interface A {
+       void test();
+   }
+   class B {
+       void test() {}
+   }
+   class C extends B implements A {} //报错，必须实现方法
+   ````
 
 **定义Java类的语法格式：先写extends，后写implements（顺序反了报错）**
 
@@ -555,12 +557,9 @@ class B {
 }
 class C extends B implements A {
     public void pX() {
-    	//System.out.println(x);报错ambiguous
+    	//System.out.println(x);报错ambiguous,类优先原则针对方法，对变量无效
         System.out.println(A.x);
         System.out.println(super.x);
-    }
-    public static void main(String[] args) {
-    	new C().pX();
     }
 }
 ````
@@ -577,7 +576,7 @@ class C extends B implements A {
 >
 > - 解决办法：实现类必须覆盖接口中同名同参数的方法，来解决冲突。
 >
-> - 若一个接口中定义了一个默认方法，而父类中也定义了一个同名同参数的非 抽象方法，则不会出现冲突问题。因为此时遵守：**类优先原则**。接口中具有 相同名称和参数的默认方法会被忽略。
+> - 若一个接口中定义了一个默认方法，而父类中也定义了一个同名同参数的非抽象方法，则不会出现冲突问题。因为此时遵守：**类优先原则**。接口中具有相同名称和参数的默认方法会被忽略。
 >
 >   ````java
 >   interface Filial {// 孝顺的
@@ -594,7 +593,7 @@ class C extends B implements A {
 >       @Override
 >       public void help() {
 >           System.out.println("我该怎么办呢？");
->           Filial.super.help();
+>           Filial.super.help();//这个语法可以在非静态代码块使用
 >           Spoony.super.help();
 >       }
 >   }
@@ -624,12 +623,10 @@ interface NetWork{
 }
 //被代理类
 class Server implements NetWork{
-
 	@Override
 	public void browse() {
 		System.out.println("真实的服务器访问网络");
 	}
-
 }
 //代理类
 class ProxyServer implements NetWork{
@@ -686,13 +683,13 @@ public class Outer {
 
 **局部内部类的特点**
 
-- 内部类仍然是一个独立的类，在编译之后内部类会被编译成独立的.class文件，但 是前面冠以外部类的类名和$符号，以及数字编号。
-- 只能在声明它的方法或代码块中使用，而且是先声明后使用。除此之外的任何地方 都不能使用该类。
+- 内部类仍然是一个独立的类，在编译之后内部类会被**编译成独立的.class文件**，但是前面冠以外部类的类名和$符号，以及数字编号。
+- 只能在声明它的方法或代码块中使用，而且是先声明后使用。除此之外的任何地方都不能使用该类。
 - 局部内部类可以使用外部类的成员，包括私有的。
-- 局部内部类可以使用外部方法的局部变量，但是必须是final的。由局部内部类和局 部变量的声明周期不同所致。
-- 局部内部类和局部变量地位类似，不能使用public,protected,缺省,private
+- 局部内部类可以使用外部方法的局部变量，但是必须**是final的**。由局部内部类和局部变量的声明周期不同所致。
+- 局部内部类和局部变量地位类似，**不能使用public,protected,缺省,private**
 - 局部内部类**不能使用static**修饰，因此也不能包含静态成员
-- **它的对象可以通过外部方法的返回值返回使用，返回值类型只能是局部内部类 的父类或父接口类型**
+- **它的对象可以通过外部方法的返回值返回使用，返回值类型只能是局部内部类的父类或父接口类型**
 
 
 
@@ -721,10 +718,6 @@ public class Test {
 从 Java 8 开始，它不要求程序员必须将访问的局部变量显式的声明为 final 的。**只要该变量不被重新赋值就可以**。
 
 一个非 final 的局部变量或方法参数，其值在初始化后就从未更改，那么该变量就是 effectively final。在 Lambda 表达式中，使用局部变量的时候，也要求该变量必须是 final 的，所以 effectively final 在 Lambda 表达式上下文中非常有用。
-
-
-
-
 
 
 
@@ -834,7 +827,7 @@ System.out.println(x == y);//false 编译时会造-128~127的Integer
 垃圾回收机制只回收JVM堆内存里的对象空间。
 
 
-对其他物理连接，比如数据库连接、输入流输出流、Socket连接无能为力
+对**其他物理连接，比如数据库连接、输入流输出流、Socket连接**无能为力
 
 
 现在的JVM有多种垃圾回收实现算法，表现各异。
@@ -844,7 +837,6 @@ System.out.println(x == y);//false 编译时会造-128~127的Integer
 
 
 可以将对象的引用变量设置为null，暗示垃圾回收机制可以回收该对象。
-
 
 程序员可以通过System.gc()或者Runtime.getRuntime().gc()来通知系统进行垃圾回收，会有
 一些效果，但是系统是否进行垃圾回收依然不确定。
@@ -964,7 +956,7 @@ Java程序在执行过程中所发生的异常事件可分为两类：
 
 **由虚拟机自动生成：**
 
-> 程序运行过程中，虚拟机检测到程序发生了问题，如果在当 前代码中没有找到相应的处理程序，就会在后台自动创建一个对应异常类的实例 对象并抛出——自动抛出 
+> 程序运行过程中，虚拟机检测到程序发生了问题，如果在当 前代码中没有找到相应的处理程序，就会在后台自动创建一个对应异常类的实例 对象并抛出——自动抛出
 
 **由开发人员手动创建：**
 
@@ -976,11 +968,13 @@ Java程序在执行过程中所发生的异常事件可分为两类：
 
 - 一般地，用户自定义异常类都是RuntimeException的子类。
 
-- 自定义异常类通常需要编写几个重载的构造器。
-- 自定义异常需要提供serialVersionUID
-- 自定义的异常通过throw抛出。
+- 自定义异常需要**提供serialVersionUID**
+
+- 自定义的异常通过throw抛出
+
 - 自定义异常最重要的是异常类的名字，当异常出现时，可以根据名字判断异常类型。
-- 自定义异常类一般包含两个构造方法：一个是**无参的默认构造方法**，另一个构造方法**以字符串的形式接收一个定制的异常消息**，并将该消息传递给超类的构造方法。
+
+  自定义异常类一般包含两个构造方法：一个是**无参的默认构造方法**，另一个构造方法**以字符串的形式接收一个定制的异常消息**，并将该消息传递给超类的构造方法。
 
 ````java
 class MyException extends Exception {
@@ -994,7 +988,6 @@ class MyException extends Exception {
     	return idnumber;
     }
 }
-
 ````
 
 ### 4.2 Java 7新特性：多异常捕获
@@ -1009,11 +1002,11 @@ try{
 
 > 注意：由于 FileNotFoundException 属于 IOException 异常，IOException 异常可以捕获它的所有子类异常。所以不能写成 `FileNotFoundException | IOException | ParseException`
 
-捕获多种类型的异常时，异常变量使用隐式的 final 修饰；
+捕获多种类型的异常时，异常变量使用**隐式的 final 修饰**
 
-捕获一种类型的异常时，异常变量没有 final 修饰。
+捕获一种类型的异常时，异常变量**没有 final 修饰**
 
-
+****
 
 ### 4.3 Java 9增强的自动资源管理
 
@@ -1027,9 +1020,9 @@ try (声明或初始化资源语句) {
 
 > 当 try 代码块结束时，自动释放资源。不再需要显式的调用 close() 方法，该形式也称为“带资源的 try 语句”
 
-1. try 语句中声明的资源被隐式声明为 final，资源的作用局限于带资源的 try 语句。
+1. **try 语句中声明的资源被隐式声明为 final**，资源的作用局限于带资源的 try 语句。
 2. 可以在一条 try 语句中声明或初始化多个资源，每个资源以`;`隔开即可。
-3. 需要关闭的资源必须实现了 AutoCloseable 或 Closeable 接口
+3. 需要关闭的资源必须**实现了 AutoCloseable 或 Closeable 接口**
 
 Java 9 再次增强了这种 try 语句。Java 9 不要求在 try 后的圆括号内声明并创建资源，只需要自动关闭的资源**有 final 修饰或者是有效的 final** (effectively final)，Java 9 允许将资源变量放在 try 后的圆括号内。上面程序在 Java 9 中可改写为如下形式。
 
@@ -1086,7 +1079,7 @@ String s4 = new String(char[] a,int startIndex,int count);
 ![image-20220925163130776](assets/image-20220925163130776.png)
 
 > 面试题：String s = new String("abc");方式创建对象，在内存中创建了几个对象？
->        两个:一个是堆空间中new结构，另一个是char[]对应的常量池中的数据："abc"
+>    **两个:一个是堆空间中new结构，另一个是char[]对应的常量池中的数据："abc"**
 
 ````java
 /*
@@ -1207,7 +1200,7 @@ public void test4(){
 
 - **public int length()**
 
-- **public char charAt(int n )**
+- **public char charAt(int n)**
 
 - **public void setCharAt(int n ,char ch)**
 
@@ -1342,9 +1335,9 @@ System.out.println(localDateTime);
 System.out.println(str1);//2019-02-18T15:42:18.797
 
 
-//        方式二：
-//        本地化相关的格式。如：ofLocalizedDateTime()
-//        FormatStyle.LONG / FormatStyle.MEDIUM / FormatStyle.SHORT :适用于LocalDateTime
+//   方式二：
+//   本地化相关的格式。如：ofLocalizedDateTime()
+//   FormatStyle.LONG / FormatStyle.MEDIUM / FormatStyle.SHORT :适用于LocalDateTime
 DateTimeFormatter formatter1 = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
 
 //本地化相关的格式。如：ofLocalizedDate()
@@ -1433,7 +1426,7 @@ class Season{
 
 - 枚举类的构造器只能使用 private 权限修饰符
 
-- 枚举类的所有实例必须在枚举类中显式列出(, 分隔 ; 结尾)。列出的实例系统会自动添加 public static final 修饰 
+- 枚举类的所有实例必须在枚举类中显式列出(, 分隔 ; 结尾)。列出的实例系统会自动添加 **public static final** 修饰
 
 - 必须在枚举类的第一行声明枚举类对象
 - 和普通 Java 类一样，枚举类可以实现一个或多个接口
@@ -1466,8 +1459,6 @@ public enum SeasonEnum {
 ## 7. 注解（Annotation）
 
 **修饰包,类, 构造器, 方 法, 成员变量, 参数, 局部变量的声明**
-
-
 
 - @author 标明开发该类模块的作者，多个作者之间使用,分割 
 
@@ -1547,7 +1538,7 @@ public enum SeasonEnum {
 
 **ElementType.TYPE_PARAMETER** 表示该注解能写在类型变量的声明语句中（如：泛型声明）。 **ElementType.TYPE_USE** 表示该注解能写在使用类型的任何语句中。
 
-**@Repeatable**:可重复注解（使用时注意拉长生命周期）
+**@Repeatable**: 可重复注解（使用时注意拉长生命周期）
 
 ![image-20220925195825971](assets/image-20220925195825971.png)
 
@@ -1611,7 +1602,7 @@ public enum SeasonEnum {
 
 > 在调用it.next()方法之前必须要调用it.hasNext()进行检测。若不调用，且下一条记录无效，直接调用it.next()会抛出NoSuchElementException异常。
 
-> next() 函数作用 ①指针下移 ②将下移以后集合位置上的元素返回
+> next() 函数作用  **①指针下移 ②将下移以后集合位置上的元素返回**
 
 注意： 
 
@@ -1725,11 +1716,9 @@ HashSet 集合判断两个元素相等的标准：**两个对象通过 hashCode(
 
 **向HashSet中添加元素的过程**
 
-> 我们向HashSet中添加元素a,首先调用元素a所在类的hashCode()方法，计算元素a的哈希值，
-> 此哈希值接着通过某种算法计算出在HashSet底层数组中的存放位置（即为：索引位置），判断
-> 数组此位置上是否已经有元素：
->     如果此位置上没有其他元素，则元素a添加成功。 --->情况1
->     如果此位置上有其他元素b(或以链表形式存在的多个元素），则比较元素a与元素b的hash值：
+> 我们向HashSet中添加元素a,首先调用元素a所在类的hashCode()方法，计算元素a的哈希值，此哈希值接着通过某种算法计算出在HashSet底层数组中的存放位置（即为：索引位置），判断数组此位置上是否已经有元素：
+>  如果此位置上没有其他元素，则元素a添加成功。 --->情况1
+>  如果此位置上有其他元素b(或以链表形式存在的多个元素），则比较元素a与元素b的hash值：
 >         如果hash值不相同，则元素a添加成功。--->情况2
 >         如果hash值相同，进而需要调用元素a所在类的equals()方法：
 >                equals()返回true,元素a添加失败
@@ -1753,7 +1742,7 @@ HashSet 集合判断两个元素相等的标准：**两个对象通过 hashCode(
 - 选择系数的时候要选择尽量大的系数。因为如果计算出来的hash地址越大，所谓的 “冲突”就越少，查找起来效率也会提高。（减少冲突）
 - 并且31只占用5bits,相乘造成数据溢出的概率较小。
 - 31可以 由i*31== (i<<5)-1来表示,现在很多虚拟机里面都有做相关优化。（提高算法效率）
-- 31是一个素数，素数作用就是如果我用一个数字来乘以这个素数，那么最终出来的结 果只能被素数本身和被乘数还有1来整除！(减少冲突)
+- 31是一个素数，素数作用就是如果我用一个数字来乘以这个素数，那么最终出来的结果只能被素数本身和被乘数还有1来整除！(减少冲突)
 
 
 
@@ -1885,25 +1874,25 @@ HashMap的内部存储结构其实是**数组和链表**的结合。当实例化
 
 **HashMap的存储结构：JDK 1.8**
 
-HashMap的内部存储结构其实是**数组+链表+树**的结合。当实例化一个 HashMap时，会初始化**initialCapacity和loadFactor**，在put第一对映射关系 时，系统会创建一个长度为initialCapacity的Node数组，这个长度在哈希表中被称为容量(Capacity)，在这个数组中可以存放元素的位置我们称之为 “桶”(bucket)，每个bucket都有自己的索引，系统可以根据索引快速的查找bucket中的元素。
+HashMap的内部存储结构其实是**数组+链表+树**的结合。当实例化一个 HashMap时，会初始化**initialCapacity和loadFactor**，在put第一对映射关系时，系统会创建一个长度为initialCapacity的Node数组，这个长度在哈希表中被称为容量(Capacity)，在这个数组中可以存放元素的位置我们称之为 “桶”(bucket)，每个bucket都有自己的索引，系统可以根据索引快速的查找bucket中的元素。
 
 > 每个bucket中存储一个元素，即一个Node对象，但每一个Node对象可以带一个引用变量next，用于指向下一个元素，因此，在一个桶中，就有可能生成一个Node链。也可能是一个一个TreeNode对象，每一个TreeNode对象 可以有两个叶子结点left和right，因此，在一个桶中，就有可能生成一个 TreeNode树。而新添加的元素作为链表的last，或树的叶子结点
 
 **那么HashMap什么时候进行树形化呢？**
 
-当HashMap中的其中一个链的对象个数如果达到了8个，此时如果capacity没有达到64，那么HashMap会先扩容解决，如果已经**达到了64**，那么这个链会变成 树，结点类型由Node变成TreeNode类型。当然，如果当映射关系被移除后， **下次resize方法时判断树的结点个数低于6个**，也会把树再转为链表。
+当HashMap中的其中一个链的对象个数如果达到了8个，此时如果capacity没有达到64，那么HashMap会先扩容解决，如果已经**达到了64**，那么这个链会变成树，结点类型由Node变成TreeNode类型。当然，如果当映射关系被移除后， **下次resize方法时判断树的结点个数低于6个**，也会把树再转为链表。
 
 **总结：JDK1.8相较于之前的变化**
 
-1.HashMap map = new HashMap();//默认情况下，先不创建长度为16的数组 
+1.HashMap map = new HashMap();默认情况下，先不创建长度为16的数组
 
-2.当首次调用map.put()时，再创建长度为16的数组 
+2.当首次调用map.put()时，再创建长度为16的数组
 
-3.数组为Node类型，在jdk7中称为Entry类型 
+3.数组为Node类型，在jdk7中称为Entry类型
 
-4.形成链表结构时，新添加的key-value对在**链表的尾部**（七上八下） 
+4.形成链表结构时，新添加的key-value对在**链表的尾部**（七上八下）
 
-5.当数组指定索引位置的链表长度>8时，且map中的数组的长度> 64时，此索引位置 上的所有key-value对使用红黑树进行存储。
+5.当数组指定索引位置的链表长度>8时，且map中的数组的长度 > 64时，此索引位置 上的所有key-value对使用红黑树进行存储
 
 
 
@@ -1965,8 +1954,6 @@ System.out.println(user);
 
 
 
-
-
 ## 9. 泛型
 
 泛型不同的引用不能相互赋值。
@@ -1977,17 +1964,17 @@ System.out.println(user);
 >
 > ````java
 > public static void main(String[] args) {
->     // 1、使用时：类似于Object，不等同于Object
->     ArrayList list = new ArrayList();
->     list.add(2131);
->     test(list);// 泛型擦除，编译不会类型检查
+>         // 1、使用时：类似于Object，不等同于Object
+>         ArrayList list = new ArrayList();
+>         list.add(2131);
+>         test(list);// 泛型擦除，编译不会类型检查
 > }
 > public static void test(ArrayList<String> list) {//直接报错
->     String str = "";
->     for (String s : list) {
->         str += s + ",";
->     }
->     System.out.println("元素:" + str);
+>        String str = "";
+>        for (String s : list) {
+>            str += s + ",";
+>        }
+>        System.out.println("元素:" + str);
 > }
 > ````
 >
@@ -2001,12 +1988,11 @@ System.out.println(user);
 
 ### 9.1 泛型在继承上的体现
 
-如果B是A的一个子类型（子类或者子接口），而G是具有泛型声明的 类或接口，G**并不是G的子类型！ 比如：String是Object的子类，但是List并不是List 的子类。**
+如果B是A的一个子类型（子类或者子接口），而G是具有泛型声明的类或接口，G\<B>**并不是G\<B>的子类型！ 比如：String是Object的子类，但是List并不是List 的子类。**
 
 ```java
 @Test
 public void test1(){
-
     Object obj = null;
     String str = null;
     obj = str;
@@ -2030,7 +2016,7 @@ public void test1(){
 
 ### 9.2 通配符
 
-- <?> 允许所有泛型的引用调用通配符指定上限 
+- \<?> 允许所有泛型的引用调用通配符指定上限 
 - 上限extends：使用时指定的类型必须是继承某个类，或者实现某个接口，即<=   
 - 下限super：使用时指定的类型不能小于操作的类，即>=
 
@@ -2081,8 +2067,6 @@ public void test4(){
 
 
 
-
-
 ## 10. IO流
 
 ### 10.1 java.io.File类
@@ -2099,7 +2083,7 @@ public void test4(){
 
 - UNIX和URL使用“/”来表示
 
-- 为了解决这个隐患，File类提供了一个常量： public static final String separator。根据操作系统，动态的提供分隔符。
+- 为了解决这个隐患，File类提供了一个常量：public static final String separator。根据操作系统动态的提供分隔符。
 
   
 
@@ -2139,7 +2123,7 @@ public void test4(){
 - 按数据流的流向不同分为：输入流，输出流 
 - 按流的角色的不同分为：节点流，处理流 
   - 节点流：直接从数据源或目的地读写数据
-  - 处理流：不直接连接到数据源或目的地，而是“连接”在已存在的流（节点流或处理流）之上，通过对数据的处理为程序提 供更为强大的读写功能。
+  - 处理流：不直接连接到数据源或目的地，而是“连接”在已存在的流（节点流或处理流）之上，通过对数据的处理为程序提供更为强大的读写功能。
 
 
 
@@ -2171,8 +2155,6 @@ public void test4(){
 
 
 
-
-
 #### 10.2.3 处理流之一：缓冲流
 
 > 为了提高数据读写的速度，Java API提供了带缓冲功能的流类，在使用这些流类 时，会创建一个内部缓冲区数组，缺省使用**8192个字节(8Kb)**的缓冲区。
@@ -2182,9 +2164,9 @@ public void test4(){
 - 向流中写入字节时，不会直接写到文件，先写到缓冲区中直到缓冲区写满， BufferedOutputStream才会把缓冲区中的数据一次性写到文件里。使用方法 flush()可以强制将缓冲区的内容全部写入输出流
 - 关闭流的顺序和打开流的顺序相反。只要关闭最外层流即可，关闭最外层流也会相应关闭内层节点流
 - flush()方法的使用：手动将buffer中内容写入文件
-- 如果是带缓冲区的流对象的close()方法，不但会关闭流，还会在关闭流之前刷 新缓冲区，关闭后不能再写出
+- 如果是带缓冲区的流对象的close()方法，不但会关闭流，还会在关闭流之前刷新缓冲区，关闭后不能再写出
 
-**BufferWriter特有方法 Stream\<String> lines**
+**BufferReader特有方法 Stream\<String> lines**
 
 
 
@@ -2320,7 +2302,7 @@ ObjectInputStream和OjbectOutputSteam
 
 serialVersionUID用来表明类的不同版本间的兼容性。简言之，其目的是以序列化对象 进行版本控制，有关各版本反序列化时是否兼容。 
 
-如果类没有显示定义这个静态常量，它的值是Java运行时环境根据类的内部细节自动生成的。若类的实例变量做了修改，serialVersionUID 可能发生变化。故建议， 显式声明。
+如果类没有显示定义这个静态常量，它的值是Java运行时环境根据类的内部细节自动生成的。若类的实例变量做了修改，serialVersionUID 可能发生变化。故建议显式声明。
 
 简单来说，Java的序列化机制是通过在运行时判断类的serialVersionUID来验证版本一致性的。在进行反序列化时，JVM会把传来的字节流中的 serialVersionUID与本地相应实体类的serialVersionUID进行比较，如果相同 就认为是一致的，可以进行反序列化，否则就会出现序列化版本不一致的异常。(InvalidCastException)
 
@@ -2388,7 +2370,7 @@ public void test3() throws IOException {
 
 ### 10.4 Java NIO
 
-Java NIO (New IO，Non-Blocking IO)是从Java 1.4版本开始引入的一套新的IO API，可以替代标准的Java IO API。NIO与原来的IO有同样的作用和目的，但是使用的方式完全不同，NIO支持面向缓冲区的(IO是面向流的)、基于 通道的IO操作。NIO将以更加高效的方式进行文件的读写操作。
+Java NIO (New IO，Non-Blocking IO)是从Java 1.4版本开始引入的一套新的IO API，可以替代标准的Java IO API。NIO与原来的IO有同样的作用和目的，但是使用的方式完全不同，NIO**支持面向缓冲区的(IO是面向流的)**、基于 通道的IO操作。NIO将以更加高效的方式进行文件的读写操作。
 
 Java API中提供了两套NIO，一套是针对标准输入输出NIO，另一套就是网络编程NIO。
 
@@ -2527,7 +2509,7 @@ class A extends Father {
 
 **Java中的内置类加载器**
 
-- Bootstrap class loader：：用C++编写的，是JVM自带的类加载器，负责Java平台核心库，用来装载核心类 库。该加载器无法直接获取
+- Bootstrap class loader：用C++编写的，是JVM自带的类加载器，负责Java平台核心库，用来装载核心类 库。该加载器无法直接获取
 - Platform class loader：平台类加载器可以看到所有平台类 ，平台类包括由平台类加载器或其祖先定义的Java SE平台API，其实现类和JDK特定的运行时类
 - System class loader：它也被称为应用程序类加载器 ，与平台类加载器不同。 系统类加载器通常用于定义应用程序类路径，模块路径和JDK特定工具上的类
 - 类加载器的继承关系：System的父加载器为Platform，而Platform的父加载器为Bootstrap
@@ -2614,15 +2596,12 @@ class ProxyTest {
         Human proxyInstance = (Human) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(), Student.class.getInterfaces(), new InvocationHandler() {
             @Override
             public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-
                 System.out.println("前置通知..");
                 Object invoke = method.invoke(student, objects);
                 System.out.println("后置通知..");
-
                 return invoke;
             }
         });
-
         proxyInstance.run();
     }
 }
@@ -2704,7 +2683,7 @@ Collection 是一种静态的内存数据 结构，而 Stream 是有关计算的
 - of() 
 - concat()
 
-通过Set接口 
+**通过Set接口** 
 
 - stream()
 
@@ -2722,7 +2701,7 @@ Collection 是一种静态的内存数据 结构，而 Stream 是有关计算的
 | mapToInt(ToIntFunction mapper)  | 返回一个IntStream其中包含将给定函数应用于此流的元素的结果    |
 | mapToDouble(ToDoubleFunction f) | 接收一个函数作为参数，该函数会被应用到每个元 素上，产生一个新的 DoubleStream |
 | mapToLong(ToLongFunction f)     | 接收一个函数作为参数，该函数会被应用到每个元 素上，产生一个新的 LongStream |
-| flatMap(Function f)             | 接收一个函数作为参数，将流中的每个值都换成另 一个流，然后把所有流连接成一个流 |
+| flatMap(Function f)             | 接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流 |
 
 **案例：flatMap**
 
@@ -2994,7 +2973,7 @@ System.out.println(list2 == copy2); // false
 
 - **ofNullable(T ..)**
 
-	- Java 8 中 Stream 不能完全为null，否则会报空指针异常。而 Java 9 中的 ofNullable 方 法允许我们创建一个单元素 Stream，可以包含一个非空元素，也可以创建一个空 Stream。
+	- Java 8 中 Stream 不能完全为null，否则会报空指针异常。而 Java 9 中的 ofNullable 方法允许我们创建一个单元素 Stream，可以包含一个非空元素，也可以创建一个空 Stream。
 	
 	  ````java
 	  // 报NullPointerException
@@ -3131,4 +3110,270 @@ CompletableFuture<HttpResponse<String>> sendAsync =
 client.sendAsync(request, responseBodyHandler);
 sendAsync.thenApply(t -> t.body()).thenAccept(System.out::println);
 ````
+
+
+
+## 14. 网络编程
+
+### 14.1 通信要素1：IP 和 端口号
+
+InetAddress：此类表示Internet协议（IP）地址
+
+- **获取实例方法**
+
+  **public static InetAddress getLocalHost()**
+
+  **public static InetAddress getByName(String host)**
+
+- **相关方法**
+
+  | 方法名                                    | 说明                                                         |
+  | :---------------------------------------- | ------------------------------------------------------------ |
+  | static InetAddress getByName(String host) | 确定主机名称的IP地址。主机名称可以是机器名称，也可以是IP地址 |
+  | String getHostName()                      | 获取此IP地址的主机名                                         |
+  | String getHostAddress()                   | 返回文本显示中的IP地址字符串                                 |
+
+
+
+### 14.2 通信要素2：网络通信协议
+
+- UDP协议
+
+  - 用户数据报协议(User Datagram Protocol)
+  - UDP是无连接通信协议，即在数据传输时，数据的发送端和接收端不建立逻辑连接。简单来说，当一台计算机向另外一台计算机发送数据时，发送端不会确认接收端是否存在，就会发出数据，同样接收端在收到数据时，也不会向发送端反馈是否收到数据。
+  - 由于使用UDP协议消耗资源小，通信效率高，所以通常都会用于音频、视频和普通数据的传输
+  - 例如视频会议通常采用UDP协议，因为这种情况即使偶尔丢失一两个数据包，也不会对接收结果产生太大影响。但是在使用UDP协议传送数据时，由于UDP的面向无连接性，不能保证数据的完整性，因此在传输重要数据时不建议使用UDP协议
+
+- TCP协议
+
+  - 传输控制协议 (Transmission Control Protocol)
+
+  - TCP协议是面向连接的通信协议，即传输数据之前，在发送端和接收端建立逻辑连接，然后再传输数据，它提供了两台计算机之间可靠无差错的数据传输。在TCP连接中必须要明确客户端与服务器端，由客户端向服务端发出连接请求，每次连接的创建都需要经过“三次握手”
+
+  - 三次握手：TCP协议中，在发送数据的准备阶段，客户端与服务器之间的三次交互，以保证连接的可靠
+
+    第一次握手，客户端向服务器端发出连接请求，等待服务器确认
+
+    第二次握手，服务器端向客户端回送一个响应，通知客户端收到了连接请求
+
+    第三次握手，客户端再次向服务器端发送确认信息，确认连接
+
+  - 完成三次握手，连接建立后，客户端和服务器就可以开始进行数据传输了。由于这种面向连接的特性，TCP协议可以保证传输数据的安全，所以应用十分广泛。例如上传文件、下载文件、浏览网页等
+
+
+
+- Java中的TCP通信
+
+  - Java对基于TCP协议的的网络提供了良好的封装，使用Socket对象来代表两端的通信端口，并通过Socket产生IO流来进行网络通信。
+
+    | 方法名                               | 说明                                                         |
+    | ------------------------------------ | ------------------------------------------------------------ |
+    | Socket(InetAddress address,int port) | 创建流套接字并将其连接到指定IP指定端口号                     |
+    | Socket(String host, int port)        | 创建流套接字并将其连接到指定主机上的指定端口号               |
+    | InputStream getInputStream()         | 返回此套接字的输入流                                         |
+    | OutputStream getOutputStream()       | 返回此套接字的输出流                                         |
+    | InetAddress getInetAddress()         | 此套接字连接到的远程 IP 地址；如果套接字是未连接的，则返回 null |
+    | InetAddress getLocalAddress()        | 获取套接字绑定的本地地址。 即本端的IP地址                    |
+    | int getPort()                        | 此套接字连接到的远程端口号；如果尚未连接套接字，则返回 0。   |
+    | int getLocalPort()                   | 返回此套接字绑定到的本地端口。 如果尚未绑定套接字，则返回 -1 |
+    | void close()                         | 套接字被关闭后，便不可在以后的网络连接中使用（即无法重新连接 或重新绑定）。需要创建新的套接字对象。 关闭此套接字也将会关闭该套接字的 InputStream 和 OutputStream |
+    | void shutdownInput()                 | 流将返回 EOF（文件结束符）                                   |
+    | void shutdownOutput()                | 何以前写入的数据都将被发送，并且后跟 TCP 的正常连接终止序列  |
+
+  - Java为客户端提供了Socket类，为服务器端提供了ServerSocket类
+
+````java
+public class TCPTest {
+    @Test
+    public void test1() throws IOException {
+
+        try (Socket socket = new Socket("127.0.0.1", 8899);
+             OutputStream os = socket.getOutputStream();) {
+            //1.创建Socket对象，指明服务器端的ip和端口号
+            //2.获取一个输出流，用于输出数据
+            //3.写出数据的操作
+            os.write("你好，我是客户端mm".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test02() {
+        try (ServerSocket ss = new ServerSocket(8899);
+             Socket socket = ss.accept();
+             InputStream is = socket.getInputStream();
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            //1.创建服务器端的ServerSocket，指明自己的端口号
+            //2.调用accept()表示接收来自于客户端的socket
+            //3.获取输入流
+            //4.读取输入流中的数据
+            byte[] buffer = new byte[5];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, len);
+            }
+            System.out.println(baos.toString());
+            System.out.println("收到了来自于：" + socket.getInetAddress().getHostAddress() + "的数据");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+````
+
+
+
+- Java中的UDP通信
+  - UDP协议是一种不可靠的网络协议，它在通信的两端各建立一个Socket对象，但是这两个Socket只是发送，接收数据的对象，因此对于基于UDP协议的通信双方而言，没有所谓的客户端和服务器的概念
+  - Java提供了DatagramSocket类作为基于UDP协议的Socket
+
+- 构造方法
+
+  | 方法名                                                      | 说明                                                 |
+  | ----------------------------------------------------------- | ---------------------------------------------------- |
+  | DatagramSocket()                                            | 创建数据报套接字并将其绑定到本机地址上的任何可用端口 |
+  | DatagramPacket(byte[] buf,int len,InetAddress add,int port) | 创建数据包,发送长度为len的数据包到指定主机的指定端口 |
+
+- 相关方法
+
+  | 方法名                         | 说明                   |
+  | ------------------------------ | ---------------------- |
+  | void send(DatagramPacket p)    | 发送数据报包           |
+  | void close()                   | 关闭数据报套接字       |
+  | void receive(DatagramPacket p) | 从此套接字接受数据报包 |
+
+**DatagramPacket类的常用方法**
+
+- InetAddress getAddress()    返回某台机器的 IP 地址，此数据报将要发往该机器或者是从该机器接收到的。
+- int getPort()    返回某台远程主机的端口号，此数据报将要发往该主机或 者是从该主机接收到的。
+- byte[] getData()    返回数据缓冲区。接收到的或将要发送的数据从缓冲区 中的偏移量 offset 处开始，持续 length 长度。
+- int getLength()    返回将要发送或接收到的数据的长度。
+
+````java
+public class UDPTest {
+    //发送端
+    @Test
+    public void sender() throws IOException {
+        DatagramSocket socket = new DatagramSocket();
+        String str = "我是UDP方式发送的导弹";
+        byte[] data = str.getBytes();
+        InetAddress inet = InetAddress.getLocalHost();
+        DatagramPacket packet = new DatagramPacket(data,0,data.length,inet,9090);
+        socket.send(packet);
+        socket.close();
+    }
+    //接收端
+    @Test
+    public void receiver() throws IOException {
+        DatagramSocket socket = new DatagramSocket(9090);
+        byte[] buffer = new byte[100];
+        DatagramPacket packet = new DatagramPacket(buffer,0,buffer.length);
+        socket.receive(packet);
+        System.out.println(new String(packet.getData(),0,packet.getLength()));
+        socket.close();
+    }
+}
+````
+
+
+
+### 14.3 URL网络编程
+
+**构造方法**
+
+- URL(String spec)：通过一个表示URL地址的字符串可以构造一个URL对象。
+- URL(URL context, String spec)：通过基 URL 和相对 URL 构造一个 URL 对象。
+- URL(String protocol, String host, String file); 
+- URL(String protocol, String host, int port, String file); 
+
+**实例方法**
+
+- String getProtocol( ) 获取该URL的协议名 
+- String getHost( ) 获取该URL的主机名
+- String getPort( ) 获取该URL的端口号
+- String getPath( ) 获取该URL的文件路径
+- String getFile( ) 获取该URL的文件名
+- String getQuery( ) 获取该URL的查询名
+- openConnection()：能从网络上读取数据
+
+````java
+public class URLTest1 {
+    public static void main(String[] args) {
+        HttpURLConnection urlConnection = null;
+        InputStream is = null;
+        try {
+            URL url = new URL("https://bilibili.com");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.connect();
+            is = urlConnection.getInputStream();
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = is.read(buffer)) != -1){
+                bo.write(buffer,0,len);
+            }
+            System.out.println(bo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //关闭资源
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(urlConnection != null){
+                urlConnection.disconnect();
+            }
+        }
+    }
+}
+````
+
+
+
+## 15. 多线程
+
+
+
+## 16. IntelliJ IDEA 的使用
+
+
+
+## 17. 图形化界面编程
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
