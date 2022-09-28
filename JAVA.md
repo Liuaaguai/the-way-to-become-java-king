@@ -3337,6 +3337,469 @@ public class URLTest1 {
 
 ## 15. 多线程
 
+### 15.1 进程和线程
+
+- 进程：是正在运行的程序
+
+   是系统进行资源分配和调用的独立单位
+
+   每一个进程都有它自己的内存空间和系统资源
+
+- 线程：是进程中的单个顺序控制流，是一条执行路径
+
+  线程作为调度和执行的单位，每个线程拥有独立的运行栈和程序计数器(pc)，线程切换的开销小
+
+**一个Java应用程序java.exe，其实至少有三个线程：main()主线程，gc() 垃圾回收线程，异常处理线程。当然如果发生异常，会影响主线程。**
+
+
+
+### 15.2 线程的创建和使用
+
+#### 15.2.1 Thread类
+
+**构造器**
+
+- Thread()：创建新的Thread对象
+- Thread(String threadname)：创建线程并指定线程实例名
+- Thread(Runnable target)：指定创建线程的目标对象，它实现了Runnable接 口中的run方法
+- Thread(Runnable target, String name)：创建新的Thread对象
+
+| 方法名                         | 说明                                                         |
+| ------------------------------ | ------------------------------------------------------------ |
+| void run()                     | 在线程开启后，此方法将被调用执行                             |
+| void start()                   | 使此线程开始执行，Java虚拟机会调用run方法()                  |
+| String getName()               | 返回线程的名称                                               |
+| void setName(String name)      | 设置该线程名称                                               |
+| static Thread currentThread()  | 返回当前线程                                                 |
+| static void yield()            | 线程让步 ，暂停当前正在执行的线程，把执行机会让给优先级相同或更高的线程 ，若队列中没有同优先级的线程，忽略此方法 |
+| join()                         | 调用线程将被阻塞，直到 join() 方法加入的 join 线程执行完为止，低优先级的线程也可以获得执行 |
+| static void sleep(long millis) | 令当前活动线程在指定时间段内放弃对CPU控制,使其他线程有机会被执行,时间到后 重排队。 |
+| stop()                         | 强制线程生命期结束，不推荐使用                               |
+| boolean isAlive()              | 判断线程是否还活着                                           |
+
+**注意点：**
+
+- 如果自己手动调用run()方法，那么就只是普通方法，没有启动多线程模式。
+- run()方法由JVM调用，什么时候调用，执行的过程控制都有操作系统的CPU 调度决定。
+- 想要启动多线程，必须调用start方法。
+- 一个线程对象只能调用一次start()方法启动，如果重复调用了，则将抛出以上 的异常“IllegalThreadStateException”。
+
+
+
+#### 15.2.2 线程的调度和优先级
+
+线程调度
+
+- 两种调度方式
+  - 分时调度模型：所有线程轮流使用 CPU 的使用权，平均分配每个线程占用 CPU 的时间片
+  - 抢占式调度模型：优先让优先级高的线程使用 CPU，如果线程的优先级相同，那么会随机选择一个，优先级高的线程获取的 CPU 时间片相对多一些
+- Java使用的是抢占式调度模型
+- 优先级相关方法
+
+| 方法名                                  | 说明                                                         |
+| --------------------------------------- | ------------------------------------------------------------ |
+| final int getPriority()                 | 返回此线程的优先级                                           |
+| final void setPriority(int newPriority) | 更改此线程的优先级 线程默认优先级是5；线程优先级的范围是：1-10 |
+
+- 相关常量
+
+  **MAX_PRIORITY：10** 
+
+  **MIN _PRIORITY：1** 
+
+  **NORM_PRIORITY：5**
+
+- 线程创建时继承父线程的优先级
+- 低优先级只是获得调度的概率低，并非一定是在高优先级线程之后才被调用
+
+>补充：线程的分类 Java中的线程分为两类：一种是守护线程，一种是用户线程。
+>
+>- 它们在几乎每个方面都是相同的，唯一的区别是判断JVM何时离开。
+>- 守护线程是用来服务用户线程的，通过在start()方法前调用 thread.setDaemon(true)可以把一个用户线程变成一个守护线程。
+>- Java垃圾回收就是一个典型的守护线程。
+>- 若JVM中都是守护线程，当前JVM将退出
+
+
+
+#### 15.2.3 实现Runnable接口
+
+**实现方式的好处**
+
+- 避免了**单继承**的局限性
+- 多个线程可以共享同一个接口实现类的对象，非常适合多个相同线程来处理同一份资源。
+
+````java
+public class ThreadTest1 {
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 100; i++) {
+                if(i % 2 == 0){
+                    System.out.println(Thread.currentThread().getName() + ":" + i);
+                }
+            }
+        });
+        t1.start();
+    }
+}
+````
+
+
+
+### 15.3 线程的生命周期
+
+JDK中用Thread.State类定义了线程的几种状态
+
+- **新建**： 当一个Thread类或其子类的对象被声明并创建时，新生的线程对象处于新建 状态
+- **就绪**：处于新建状态的线程被start()后，将进入线程队列等待CPU时间片，此时它已具备了运行的条件，只是没分配到CPU资源
+- **运行**：当就绪的线程被调度并获得CPU资源时,便进入运行状态， run()方法定义了线程的操作和功能
+- **阻塞**：在某种特殊情况下，被人为挂起或执行输入输出操作时，让出 CPU 并临时中止自己的执行，进入阻塞状态 
+- **死亡**：线程完成了它的全部工作或线程被提前强制性地中止或出现异常导致结束
+
+![image-20220928081034898](assets/image-20220928081034898.png)
+
+### 15.4 线程的同步
+
+**问题的提出** 
+
+- 多个线程执行的不确定性引起执行结果的不稳定
+- 多个线程对数据的共享，会造成操作的不完整性，会破坏数据。
+
+
+
+#### 15.4.1 Synchronized的使用方法
+
+Java对于多线程的安全问题提供了专业的解决方式：**同步机制**
+
+同步机制中的锁在《Thinking in Java》中，是这么说的：对于并发工作，你需要某种方式来防止两个任务访问相同的资源（其实就是共享资源竞争）。 防止这种冲突的方法 就是当资源被一个任务使用时，在其上加锁。第一个访问某项资源的任务必须 锁定这项资源，使其他任务在其被解锁之前，就无法访问它了，而在其被解锁之时，另一个任务就可以锁定并使用它了。
+
+**synchronized的锁是什么？** 
+
+**任意对象都可以作为同步锁。所有对象都自动含有单一的锁（监视器）。**
+
+- 同步方法的锁：静态方法（类名.class）、非静态方法（this）
+- 同步代码块：自己指定，很多时候也是指定为this或类名.class
+
+
+
+**释放锁的操作**
+
+- 当前线程的同步方法、同步代码块执行结束。
+- 当前线程在同步代码块、同步方法中遇到break、return终止了该代码块、 该方法的继续执行。
+- 当前线程在同步代码块、同步方法中出现了未处理的Error或Exception，导致异常结束。
+- 当前线程在同步代码块、同步方法中执行了线程对象的wait()方法，当前线程暂停，并释放锁。
+
+**不会释放锁的操作**
+
+- 线程执行同步代码块或同步方法时，程序调用**Thread.sleep()、 Thread.yield()**方法暂停当前线程的执行
+- 线程执行同步代码块时，其他线程调用了该线程的suspend()方法将该线程挂起，该线程不会释放锁（同步监视器）。
+
+**案例：单例设计模式之懒汉式(线程安全)**
+
+````java
+class Singleton {
+    private static Singleton instance = null;
+    private Singleton() {}
+    public static Singleton getInstance() {
+        if(instance == null) {
+            synchronized(Singleton.class) {
+            	if(instance == null)
+            		instance = new Singleton();
+            }
+        }
+        return instance;
+    }
+}
+````
+
+
+
+#### 15.4.2 死锁问题
+
+不同的线程分别占用对方需要的同步资源不放弃，都在等待对方放弃 自己需要的同步资源，就形成了线程的死锁 出现死锁后，不会出现异常，不会出现提示，只是所有的线程都处于 **阻塞状态，无法继续**
+
+![image-20220928085442143](assets/image-20220928085442143.png)
+
+#### 15.4.3 Lock
+
+从JDK 5.0开始，Java提供了更强大的线程同步机制——通过显式定义同 步锁对象来实现同步。同步锁使用Lock对象充当。
+
+java.util.concurrent.locks.Lock接口是控制多个线程对共享资源进行访问的 工具。锁提供了对共享资源的独占访问，每次只能有一个线程对Lock对象 加锁，线程开始访问共享资源之前应先获得Lock对象.
+
+ReentrantLock 类实现了 Lock ，**它拥有与 synchronized 相同的并发性和内存语义**，在实现线程安全的控制中，比较常用的是ReentrantLock，可以显式加锁、释放锁。
+
+- ReentrantLock构造方法
+
+  | 方法名              | 说明                        |
+  | ------------------- | --------------------------- |
+  | ReentrantLock()     | 创建一个ReentrantLock的实例 |
+  | ReentrantLock(true) | 创建公平锁                  |
+
+- 加锁解锁方法
+
+  | 方法名        | 说明   |
+  | ------------- | ------ |
+  | void lock()   | 获得锁 |
+  | void unlock() | 释放锁 |
+
+synchronized 与 Lock 的对比 1. Lock是显式锁（手动开启和关闭锁，别忘记关闭锁），synchronized是 隐式锁，出了作用域自动释放 2. Lock只有代码块锁，synchronized有代码块锁和方法锁 3. 使用Lock锁，JVM将花费较少的时间来调度线程，性能更好。并且具有 更好的扩展性（提供更多的子类）
+
+
+
+### 15.5 线程的通信
+
+案例：使用两个线程打印 1-100。线程1, 线程2 交替打印
+
+````java
+class Communication implements Runnable {
+    int i = 1;
+    public void run() {
+        while (true) {
+            synchronized (this) {
+            	notify();
+                if (i <= 100) {
+                	System.out.println(Thread.currentThread().getName() + ":" + i++);
+                } else
+                	break;
+                try {
+                	wait();
+                } catch (InterruptedException e) {
+                	e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+````
+
+- **wait():一旦执行此方法，当前线程就进入阻塞状态，并释放同步监视器。当前线程必须具有对该对象的监控权**
+
+ * **notify():一旦执行此方法，就会唤醒被wait的一个线程。如果有多个线程被wait，就唤醒优先级高的那个。**
+
+ * **notifyAll():一旦执行此方法，就会唤醒所有被wait的线程。**
+
+    
+
+**说明：**
+
+ * 1.wait()，notify()，notifyAll()三个方法必须使用在同步代码块或同步方法中。
+
+ * 2.wait()，notify()，notifyAll()三个方法的调用者必须是同步代码块或同步方法中的**同步监视器**。否则，会出现**IllegalMonitorStateException异常**
+
+ * 3.wait()，notify()，notifyAll()三个方法是定义在java.lang.Object类中。
+
+  
+
+**面试题：sleep() 和 wait()的异同？**
+
+1.相同点：一旦执行方法，都可以使得当前的线程进入**阻塞状态**。
+
+2.不同点：
+
+- 1）两个方法声明的位置不同：Thread类中声明sleep() , Object类中声明wait()
+- 2）调用的要求不同：sleep()可以在任何需要的场景下调用。 wait()必须使用在同步代码块或同步方法中
+- 3）关于是否释放同步监视器：如果两个方法都使用在同步代码块或同步方法中，**sleep()不会释放锁，wait()会释放锁。**
+
+**案例：生产者消费者**
+
+````java
+class Clerk {
+    private int productCount = 0;
+    //生产产品
+    public synchronized void produceProduct() {
+        if(productCount < 20) {
+            productCount++;
+            System.out.println(Thread.currentThread().getName() + ":开始生产第" + productCount + "个产品");
+            notify();
+        }else{
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    //消费产品
+    public synchronized void consumeProduct() {
+        if(productCount > 0){
+            System.out.println(Thread.currentThread().getName() + ":开始消费第" + productCount + "个产品");
+            productCount--;
+            notify();
+        }else{
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+class Producer extends Thread{//生产者
+
+    private Clerk clerk;
+
+    public Producer(Clerk clerk) {
+        this.clerk = clerk;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(getName() + ":开始生产产品.....");
+        while(true){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            clerk.produceProduct();
+        }
+    }
+}
+
+class Consumer extends Thread{//消费者
+    private Clerk clerk;
+    public Consumer(Clerk clerk) {
+        this.clerk = clerk;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(getName() + ":开始消费产品.....");
+        while(true){
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            clerk.consumeProduct();
+        }
+    }
+}
+public class ProductTest {
+    public static void main(String[] args) {
+        Clerk clerk = new Clerk()
+        Producer p1 = new Producer(clerk);
+        p1.setName("生产者1");
+        Consumer c1 = new Consumer(clerk);
+        c1.setName("消费者1");
+        Consumer c2 = new Consumer(clerk);
+        c2.setName("消费者2");
+        p1.start();
+        c1.start();
+        c2.start();
+    }
+}
+````
+
+
+
+### 15.6  JDK5.0 新增线程创建方式
+
+**新增方式一：实现Callable接口**
+
+与使用Runnable相比， Callable功能更强大些
+
+- 相比run()方法，可以有返回值
+- 方法可以抛出异常
+- 支持泛型的返回值
+- 需要借助FutureTask类，比如获取返回结果
+
+**Future接口**
+
+- 以对具体Runnable、Callable任务的执行结果进行取消、查询是否完成、获取结果等。
+- FutrueTask是Futrue接口的唯一的实现类
+- FutureTask 同时实现了Runnable, Future接口。它既可以作为 Runnable被线程执行，又可以作为Future得到Callable的返回值
+
+````java
+class NumThread implements Callable{
+    //2.实现call方法，将此线程需要执行的操作声明在call()中
+    @Override
+    public Object call() throws Exception {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            if(i % 2 == 0){
+                System.out.println(i);
+                sum += i;
+            }
+        }
+        return sum;
+    }
+}
+public class ThreadNew {
+    public static void main(String[] args) {
+        //3.创建Callable接口实现类的对象
+        NumThread numThread = new NumThread();
+        //4.将此Callable接口实现类的对象作为传递到FutureTask构造器中，创建FutureTask的对象
+        FutureTask<Integer> futureTask = new FutureTask<>(numThread);
+        //5.将FutureTask的对象作为参数传递到Thread类的构造器中，创建Thread对象，并调用start()
+        new Thread(futureTask).start();
+        try {
+            //6.获取Callable中call方法的返回值
+            //get()返回值即为FutureTask构造器参数Callable实现类重写的call()的返回值。
+            Integer sum = futureTask.get();
+            System.out.println("总和为：" + sum);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+}
+````
+
+**新增方式二：使用线程池**
+
+思路：提前创建好多个线程，放入线程池中，使用时直接获取，使用完放回池中。可以避免频繁创建销毁、实现重复利用。 
+
+**好处：** 
+
+- 提高响应速度（减少了创建新线程的时间）
+
+- 降低资源消耗（重复利用线程池中线程，不需要每次都创建）
+
+- 便于线程管理
+
+  > corePoolSize：核心池的大小
+  >
+  > maximumPoolSize：最大线程数
+  >
+  > keepAliveTime：线程没有任务时最多保持多长时间后会终止
+
+**JDK 5.0起提供了线程池相关API：ExecutorService 和 Executors** 
+
+ExecutorService：真正的线程池接口。常见子类ThreadPoolExecutor 
+
+- void execute(Runnable command) ：执行任务/命令，没有返回值
+- Future submit(Callable task)：执行任务，有返回值，一般又来执行 Callable 
+- void shutdown() ：关闭连接池
+
+Executors：工具类、线程池的工厂类，用于创建并返回不同类型的线程池 
+
+- Executors.newCachedThreadPool()：创建一个可根据需要创建新线程的线程池
+- Executors.newFixedThreadPool(n); 创建一个可重用固定线程数的线程池
+- Executors.newSingleThreadExecutor() ：创建一个只有一个线程的线程池
+- Executors.newScheduledThreadPool(n)：创建一个线程池，它可安排在给定延迟后运 行命令或者定期地执行。
+
+````java
+//1. 提供指定线程数量的线程池
+ExecutorService service = Executors.newFixedThreadPool(10);
+ThreadPoolExecutor service1 = (ThreadPoolExecutor) service;
+//设置线程池的属性
+//        System.out.println(service.getClass());
+//        service1.setCorePoolSize(15);
+//        service1.setKeepAliveTime();
+
+//2.执行指定的线程的操作。需要提供实现Runnable接口或Callable接口实现类的对象
+service.execute(new NumberThread());//适合适用于Runnable
+service.execute(new NumberThread1());//适合适用于Runnable
+
+//3.关闭连接池
+service.shutdown();
+````
+
+​	
+
+
+
 
 
 ## 16. IntelliJ IDEA 的使用
